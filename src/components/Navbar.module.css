@@ -1,0 +1,22 @@
+.navbar{
+    background-color: blueviolet;
+    padding: 15px 20px;
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.navbar h1{
+    color:white;
+    margin:15px;
+}
+.navLinks{
+    display: flex;
+    gap:50px;
+}
+.navLinks a{
+    color:black;
+    font-weight: 100px;
+    font-size:medium;
+    padding: 8px 10px;
+    border-radius: 10px;
+}
