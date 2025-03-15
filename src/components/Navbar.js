@@ -8,7 +8,7 @@ const Navbar=()=>{
             <div className={styles.navLinks}>
                 <Link to="/">Home</Link>
                 <Link to="/Signin">Signin</Link>
-                <Link to="/about">About</Link>
+                <Link to="/about">About</Link> 
             </div>
         </nav>
     );

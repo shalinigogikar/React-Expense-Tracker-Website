@@ -25,6 +25,8 @@ import styles from "./SignUp.module.css";
         }
       };
     return(
+      <div >
+        <h2>Sign Up</h2>
         <form className={styles.signupForm}onSubmit={handleSignup}>
           <input
           type="email"
@@ -44,6 +46,11 @@ import styles from "./SignUp.module.css";
           {error && <p className={styles.errorMessage}>{error}</p>}
           <button>SignUp</button>
         </form>
+        <p>Already have an Account</p>
+        <button onClick={()=>navigate("./sighin")}>
+          Login
+        </button>
+        </div>
     );
  };
  export default SignUp;
