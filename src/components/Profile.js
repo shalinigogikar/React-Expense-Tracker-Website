@@ -1,18 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { getAuth } from "firebase/auth";
+import { getAuth,sendEmailVerification } from "firebase/auth";
 import {getFirestore, doc, getDoc } from "firebase/firestore";
 //import { db } from "../firebase";
 const Profile=()=>{
     const[profile,setProfile]=useState({});
     const[completion,setCompletion]=useState(0);
+    const[emailVerified,setEmailVerified]=useState(false);
+    const[verificationMessage,setVerificationMessage]=useState("");
     const auth=getAuth();
+    const user=auth.currentUser;
    const db=getFirestore();
     useEffect(()=>{
         const fetchProfile=async()=>{
-            const user=auth.currentUser;
+           // const user=auth.currentUser;
             if(user){
                 try{
+                    setEmailVerified(user.emailVerified);
                     const idToken = await user.getIdToken();
                     console.log("User ID Token:", idToken);
                 const userDocRef=doc(db,"users",user.uid);
@@ -36,6 +40,16 @@ const Profile=()=>{
         };
         fetchProfile();
     },[auth,db]);
+    const handleSendVerification = async () => {
+        if (user) {
+            try {
+                await sendEmailVerification(user);
+                setVerificationMessage("Verification email sent! Please check your inbox.");
+            } catch (error) {
+                setVerificationMessage(`Error: ${error.message}`);
+            }
+        }
+    };
     return(
         <>
         <h2>welcome to Expense Tracker!!</h2>
@@ -45,6 +59,13 @@ const Profile=()=>{
             <p>your profile is incomplete. <Link to="/updateprofile">Complete Profile</Link></p>
             )}
         </div>
+        {!emailVerified && (
+                <div>
+                    <p>Your email is not verified!</p>
+                    <button onClick={handleSendVerification}>Verify Email</button>
+                    {verificationMessage && <p>{verificationMessage}</p>}
+                </div>
+            )}
         </>
     );
 };
