@@ -1,22 +1,24 @@
 .navbar{
-    background-color: blueviolet;
-    padding: 15px 20px;
+    background-color: antiquewhite;
+    padding: 10px;
     display:flex;
     justify-content: space-between;
     align-items: center;
 }
-.navbar h1{
-    color:white;
-    margin:15px;
+.navbar-h1{
+    color:slateblue;
+    margin:0;
 }
-.navLinks{
-    display: flex;
-    gap:50px;
-}
-.navLinks a{
+.navbar-link{
     color:black;
-    font-weight: 100px;
-    font-size:medium;
-    padding: 8px 10px;
-    border-radius: 10px;
+    text-decoration: none;
+    margin :0 15px;
+    font-size: 10px;
+    transition: color 0.3s ease-in-out;
+}
+.navbar-a:hover{
+    color:#ffcc00;
+}
+.navbar-link:active{
+    color:#ff9900;
 }

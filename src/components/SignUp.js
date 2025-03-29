@@ -1,56 +1,71 @@
 import React,{useState} from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,Link } from "react-router-dom";
 import { auth } from "../firebase";
 import {createUserWithEmailAndPassword} from "firebase/auth"; 
-import styles from "./SignUp.module.css";
+import classes from "./SignUp.module.css";
  const SignUp=()=>{
-    const [email,setEmail]=useState("");
-    const [password,setPassword]=useState("");
-    const [confirmPassword,setConfirmPassword]=useState("");
+  const [form,setForm]=useState({
+    email:"",
+    password:"",
+    confirmPassword:"",
+});
     const [error,setError]=useState(null);
     const navigate=useNavigate();
-    const handleSignup = async (e) => {
+    const handleChange=(e)=>{
+      setForm({
+        ...form,
+        [e.target.name]:e.target.value,
+      });;
+  }
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setError(null);
-        if (password !== confirmPassword) {
+        if (form.password !== form.confirmPassword) {
           setError("Passwords do not match!");
           return;
         }
         try {
-          await createUserWithEmailAndPassword(auth, email, password);
-          alert("successfully completed signUp now please Login In!");
-          navigate("/signin");
+          await createUserWithEmailAndPassword(auth, form.email, form.password);
+          alert("successfully  signUp now please Login In!");
+          navigate("/login");
         } catch (err) {
           setError(err.message);
         }
       };
     return(
-      <div >
-        <h2>Sign Up</h2>
-        <form className={styles.signupForm}onSubmit={handleSignup}>
+      <>
+        <form className={classes["form-container"]}onSubmit={handleSubmit}>
+        <h2 className={classes["form-header"]}>Sign Up</h2>
+        <label htmlFor="email">Email:
           <input
           type="email"
+          name="email"
           placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)} required/>
+          value={form.email}
+          className={classes["form-input"]}
+          onChange={handleChange} required/></label>
+          <label htmlFor="password">Password:
            <input
           type="password"
+          name="password"
+          className={classes["form-input"]}
           placeholder="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)} required/>
+          value={form.password}
+          onChange={handleChange} required/></label>
+          <label htmlFor="password">Confirm Password:
            <input
           type="password"
+          name="confirmPassword"
           placeholder="confirmPassword"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)} required/>
-          {error && <p className={styles.errorMessage}>{error}</p>}
-          <button>SignUp</button>
+          className={classes["form-input"]}
+          value={form.confirmPassword}
+          onChange={handleChange} required/></label>
+          <button type="submit" className={classes["form_button"]}>Sign Up</button>
+            {error && <p style={{ color: "red" }}>{error}</p>}
+            <p>Already have an account?
+            <Link to="/login">please Login </Link></p>
         </form>
-        <p>Already have an Account</p>
-        <button onClick={()=>navigate("./sighin")}>
-          Login
-        </button>
-        </div>
+        </>
     );
  };
  export default SignUp;
