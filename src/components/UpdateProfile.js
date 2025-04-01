@@ -1,18 +1,20 @@
 import React,{useState,useEffect} from "react";
-import { getAuth } from "firebase/auth";
+import { getAuth ,onAuthStateChanged} from "firebase/auth";
 import {  doc,getDoc, setDoc } from "firebase/firestore";
 import { db } from "../firebase";
 const UpdateProfile=()=>{
     const[details,setDetails]=useState({fullName: "", phoneNumber: ""});
+    const [loading,setLoading]=useState(true);
+    const[user,setUser]=useState(null);
     const auth = getAuth();
    // const db = getFirestore();
    useEffect(() => {
-    const fetchProfile = async () => {
-        const user = auth.currentUser;
-        if (user) {
+    const unsubscribe=onAuthStateChanged(auth,async(currentUser)=>{
+    if(currentUser){
+        setUser(currentUser);
             try {
                 // Fetch user's profile from Firestore
-                const userDocRef = doc(db, "users", user.uid);
+                const userDocRef = doc(db, "users", currentUser.uid);
                 const userDoc = await getDoc(userDocRef);
 
                 if (userDoc.exists()) {
@@ -26,10 +28,11 @@ const UpdateProfile=()=>{
                 console.error("Error fetching profile:", error);
             }
         }
-    };
+        setLoading(false);
+    });
 
-    fetchProfile();
-}, [auth]);
+    return()=>unsubscribe();
+},[]);
     const handleChange=(e)=>{
         setDetails({
             ...details,

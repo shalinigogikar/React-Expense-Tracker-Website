@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { getAuth,sendEmailVerification } from "firebase/auth";
-import {getFirestore, doc, getDoc } from "firebase/firestore";
-//import { db } from "../firebase";
+import { getAuth,sendEmailVerification,onAuthStateChanged } from "firebase/auth";
+import {doc, getDoc } from "firebase/firestore";
+import { db } from "../firebase";
 const Profile=()=>{
     const[profile,setProfile]=useState({});
     const[completion,setCompletion]=useState(0);
     const[emailVerified,setEmailVerified]=useState(false);
     const[verificationMessage,setVerificationMessage]=useState("");
     const auth=getAuth();
-    const user=auth.currentUser;
-   const db=getFirestore();
+   // const user=auth.currentUser;
+   //const db=getFirestore();
     useEffect(()=>{
-        const fetchProfile=async()=>{
+        const fetchProfile=async(user)=>{
            // const user=auth.currentUser;
             if(user){
                 try{
@@ -38,9 +38,14 @@ const Profile=()=>{
             }
         }
         };
-        fetchProfile();
-    },[auth,db]);
-    const handleSendVerification = async () => {
+        const unsubscribe=onAuthStateChanged(auth,(user)=>{
+            if(user){
+                fetchProfile(user);   
+            }
+        });
+        return()=>unsubscribe();
+    },[auth]);
+    const handleSendVerification = async (user) => {
         if (user) {
             try {
                 await sendEmailVerification(user);
