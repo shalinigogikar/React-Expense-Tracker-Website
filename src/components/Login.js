@@ -53,6 +53,7 @@ const [error,setError]=useState(null);
           onChange={handleChange} required/></label>
           <button type="submit" className={classes["form_button"]}>Login</button>
             {error && <p style={{ color: "red" }}>{error}</p>}
+            <p>Forgot password? <Link to="/forgot-password">Reset Password</Link></p>
             <p> don't have account?
             <Link to="/signup">please SignUp</Link></p>
         </form>
