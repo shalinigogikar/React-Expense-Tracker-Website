@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { getAuth,sendEmailVerification,onAuthStateChanged } from "firebase/auth";
 import {doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase";
+import ExpenseForm from "./ExpenseForm";
 const Profile=()=>{
     const[profile,setProfile]=useState({});
     const[completion,setCompletion]=useState(0);
@@ -71,6 +72,7 @@ const Profile=()=>{
                     {verificationMessage && <p>{verificationMessage}</p>}
                 </div>
             )}
+            <ExpenseForm/>
         </>
     );
 };
